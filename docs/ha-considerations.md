@@ -46,9 +46,16 @@ The files are assumed to reside in a `/etc/keepalived` directory. Note that howe
 ! Configuration File for keepalived
 global_defs {
     router_id LVS_DEVEL
+    enable_script_security
 }
 vrrp_script check_apiserver {
   script "/etc/keepalived/check_apiserver.sh"
+  user keepalived_script
+  #useradd -r -s /sbin/nologin -g keepalived_script -M keepalived_script
+  #groupadd -r keepalived_script
+  #chown keepalived_script:keepalived_script /etc/keepalived/check_apiserver.sh
+  #chmod 750 /etc/keepalived/check_apiserver.sh
+  # otherwise you get security warnings from keepalived Keepalived v2.0.19 (10/19,2019)
   interval 3
   weight -2
   fall 10
